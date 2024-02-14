@@ -11,7 +11,7 @@
   display: inherit;
   justify-content: inherit;
   align-items: inherit;
-  font-size: 0.85rem;
+  font-size: 1.5rem;
   max-width: var(--max-width);
   width: 100%;
   z-index: 2;
@@ -34,9 +34,15 @@
   border-radius: var(--border-radius);
 }
 
+.profilePicture {
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 .code {
-  font-weight: 700;
+  font-weight: 400;
   font-family: var(--font-mono);
+  font-size: 0.6rem;
 }
 
 .grid {
@@ -207,16 +213,6 @@
 @media (min-width: 701px) and (max-width: 1120px) {
   .grid {
     grid-template-columns: repeat(2, 50%);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .vercelLogo {
-    filter: invert(1);
-  }
-
-  .logo {
-    filter: invert(1) drop-shadow(0 0 0.3rem #ffffff70);
   }
 }
 
