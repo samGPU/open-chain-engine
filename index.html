@@ -25,80 +25,27 @@
   </head>
   <body>
     <main class='main'>
-      <div class='description'>
-        <p>
-          Grand Prix Arena&nbsp; <br>
-          <code class='code'>a big bang competition project</code>
-        </p>
-        <div>
-          <a
-            href="https://www.twitter.com/samgpu/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/pfp.png"
-              alt="Profile Picture"
-              class='profilePicture'
-              width='96'
-              height='96'
-              priority
-            />
-          </a>
+      <div class="topRight">
+        <button class="button" id="connectButton">Connect Wallet</button>
+        <button class="button" id="convertButton">Convert</button>
+      </div>
+      <div class="topLeft">
+        <p id="score"><code>SCORE</code>: 0</p>
+        <p id="flags"></p>
+      </div>
+      <div class="center">
+        <div class="card" id="controlsTutorial">
+          <p>Collect ⛳'s by moving the car with ⬅️ and ➡️</p>
+        </div>
+        <div class="card" id="walletTutorial">
+          <p>Connect your wallet to save progress - unlock different vehicles as you increase your $FLAG balance.</p>
+        </div>
+        <div class="card" id="convertTutorial">
+          <p>Use the Convert button to claim your $FLAG tokens!</p>
         </div>
       </div>
-
-      <div class='center'>
-      <a href="./play.html">
-            <img
-            class='logo'
-            src="/images/hero.png"
-            alt="Hero Image"
-            width='480'
-            height='270'
-            priority
-            />
-      </a>
-      </div>
-
-      <div class='grid'>
-        <div
-          class='card'
-        >
-          <h2>
-            Play <span>🕹️</span>
-          </h2>
-          <p>Score points. Complete objectives. Have fun.</p>
-        </div>
-
-        <div
-          class='card'
-        >
-          <h2>
-            Claim <span>💎</span>
-          </h2>
-          <p>Claim an ERC-20 Token based on your performance in-game.</p>
-        </div>
-
-        <div
-          class='card'
-        >
-          <h2>
-            Upgrade <span>🎁</span>
-          </h2>
-          <p>Discover in-game perks, upgrades and features based on your balance.</p>
-        </div>
-
-        <div
-          class='card'
-        >
-          <h2>
-            Trade <span>🤝</span>
-          </h2>
-          <p>As govenor of your own tokens, you are free to trade them to any eligble wallet.</p>
-        </div>
-
-      </div>
+      <canvas class="webgl" id="webgl"></canvas>
+      <script type="module" src="./main.js"></script>
     </main>
   </body>
 </html>
