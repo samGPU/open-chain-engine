@@ -4,7 +4,7 @@ import Game from "./game/game";
 const walletController = new WalletController();
 const game = new Game();
 
-let flagBalance = 10;
+let flagBalance = 0;
 
 window.addEventListener('resize', () => {
     game.resize();
