@@ -4,7 +4,7 @@ import Game from "./game/game";
 const walletController = new WalletController();
 const game = new Game();
 
-let flagBalance = 0;
+let flagBalance = '...';
 
 window.addEventListener('resize', () => {
     game.resize();
@@ -12,11 +12,19 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('keydown', (event) => {
   game.keyDownHandle(event.key);
+  updateFlagBalance();
 });
 
 window.addEventListener('keyup', (event) => {
   game.keyUpHandle(event.key);
 });
+
+function updateFlagBalance() {
+  // Create a promise to update flagBalance
+  walletController.getBalance().then((balance) => {
+    flagBalance = Math.floor(balance * 100);
+  });
+}
 
 const connectButton = document.getElementById('connectButton');
 connectButton.onclick = async () => {
@@ -37,6 +45,7 @@ convertButton.disabled = true;
 convertButton.onclick = async () => {
   if(walletController.walletConnected){
     await walletController.convertScoreToToken(game.getScore());
+    game.resetScore();
   }
 };
 
@@ -47,12 +56,14 @@ const controlsTutorial = document.getElementById('controlsTutorial');
 const walletTutorial = document.getElementById('walletTutorial');
 const convertTutorial = document.getElementById('convertTutorial');
 
+let timer = 0;
 function loop() {
   requestAnimationFrame(loop);
 
   if(walletController.walletConnected) {
     walletTutorial.style.display = 'none';
     convertButton.disabled = false;
+    flagElement.innerHTML = '<code>$FLAG</code>: ' + flagBalance;
   }
 
   let score = game.getScore();
@@ -65,11 +76,14 @@ function loop() {
   }
 
   scoreElement.innerHTML = '<code>SCORE</code>: ' + score;
-  flagElement.innerHTML = '<code>FLAGS</code>: ' + flagBalance;
 
-  // flagBalance = walletController.getBalance();
+  if(timer > 200 && walletController.walletConnected) {
+    updateFlagBalance();
+    timer = 0;
+  }
 
   game.animate();
+  timer++;
 }
 
 loop();

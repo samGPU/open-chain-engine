@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export default class Game {
-    #SCORE = 0;
+    #SCORE = 10;
 
     constructor() {
         this.sizes = {
@@ -137,6 +137,10 @@ export default class Game {
 
     #increaseScore() {
         this.#SCORE++;
+    }
+
+    resetScore() {
+        this.#SCORE = 0;
     }
 
     resize() {

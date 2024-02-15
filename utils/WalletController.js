@@ -50,8 +50,8 @@ export default class WalletController {
     async #getProviderOrSigner(needSigner = false) {
         // Connect to Metamask
         // Since we store `web3Modal` as a reference, we need to access the `current` value to get access to the underlying object
-        const provider = await this.web3Modal.connect();
-        const web3Provider = new providers.Web3Provider(provider);
+        this.provider = await this.web3Modal.connect();
+        const web3Provider = new providers.Web3Provider(this.provider);
       
         // If user is not connected to the Mumbai network, let them know and throw an error
         const { chainId } = await web3Provider.getNetwork();
@@ -65,8 +65,8 @@ export default class WalletController {
         }
       
         if (needSigner) {
-            const signer = web3Provider.getSigner();
-            return signer;
+            this.signer = web3Provider.getSigner();
+            return this.signer;
         }
         return web3Provider;
     };
@@ -108,37 +108,34 @@ export default class WalletController {
     }
 
     async getBalance() {
-        console.log('TODO - getBalance of $FLAG token')
-    }
-
-    async convertScoreToToken(score) {
-        console.log('TODO - convert the user score to $FLAG token')
+        // Get the balance of ETH of the connected wallet
+        this.signer = await this.#getProviderOrSigner(true);
+        this.provider = await this.#getProviderOrSigner();
+        const address = await this.signer.getAddress();
+        const balance = await this.provider.getBalance(address);
+        return utils.formatEther(balance);
     }
 
     /**
-     * publicMint: Mint an NFT
+     * Call the function claimTokens in the smart contract
      */
-    async publicMint() {
+    async convertScoreToToken(score) {
         try {
-            console.log("Public mint");
             // We need a Signer here since this is a 'write' transaction.
-            const signer = await this.#getProviderOrSigner(true);
+            this.signer = await this.#getProviderOrSigner(true);
             // Create a new instance of the Contract with a Signer, which allows
             // update methods
-            const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
-            // call the mint from the contract to mint the LW3Punks
-            const tx = await nftContract.mint({
-                // value signifies the cost of one LW3Punks which is "0.01" eth.
-                // We are parsing `0.01` string to ether using the utils library from ethers.js
-                value: utils.parseEther("0.01"),
-            });
+            const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, this.signer);
+            // call the claimTokens from the contract to convert the score to tokens
+            const tx = await nftContract.claimTokens(score);
             this.setLoading(true);
             // wait for the transaction to get mined
             await tx.wait();
             this.setLoading(false);
-            window.alert("You successfully minted a LW3Punk!");
+            return true
         } catch (err) {
             console.error(err);
+            return false
         }
-    };
+    }
 }
