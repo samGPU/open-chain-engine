@@ -6,8 +6,6 @@ export default class WalletController {
     constructor() {
         this.walletConnected = false;
         this.transactionInProgress = false;
-        this.provider = null;
-        this.signer = null;
 
         this.web3Modal = new Web3Modal({
             network: "blast sepolia",
@@ -50,8 +48,8 @@ export default class WalletController {
     async #getProviderOrSigner(needSigner = false) {
         // Connect to Metamask
         // Since we store `web3Modal` as a reference, we need to access the `current` value to get access to the underlying object
-        this.provider = await this.web3Modal.connect();
-        const web3Provider = new providers.Web3Provider(this.provider);
+        let provider = await this.web3Modal.connect();
+        const web3Provider = new providers.Web3Provider(provider);
       
         // If user is not connected to the Mumbai network, let them know and throw an error
         const { chainId } = await web3Provider.getNetwork();
@@ -65,8 +63,8 @@ export default class WalletController {
         }
       
         if (needSigner) {
-            this.signer = web3Provider.getSigner();
-            return this.signer;
+            let signer = web3Provider.getSigner();
+            return signer;
         }
         return web3Provider;
     };
@@ -107,13 +105,28 @@ export default class WalletController {
         }
     }
 
-    async getBalance() {
-        // Get the balance of ETH of the connected wallet
-        this.signer = await this.#getProviderOrSigner(true);
-        this.provider = await this.#getProviderOrSigner();
-        const address = await this.signer.getAddress();
-        const balance = await this.provider.getBalance(address);
-        return utils.formatEther(balance);
+    async getTokenBalance(tokenAddress) {
+        let signer = await this.#getProviderOrSigner(true);
+        let provider = await this.#getProviderOrSigner();
+        const address = await signer.getAddress();
+
+        // Create a new contract instance with the token's contract address and the ERC20 ABI
+        const tokenContract = new Contract('0x6C2EE8F9DFc770387D4A5D327D4Ddb6C9dd953Fa', [
+            // Some details about the token
+            "function balanceOf(address owner) view returns (uint256)",
+            "function decimals() view returns (uint8)"
+        ], provider);
+
+        // Get the token balance
+        const balance = await tokenContract.balanceOf(address);
+
+        // Get the number of decimals the token uses
+        const decimals = await tokenContract.decimals();
+
+        // Convert the balance to a decimal number, taking into account the token's decimals
+        const formattedBalance = balance / Math.pow(10, decimals);
+
+        return formattedBalance;
     }
 
     /**
@@ -122,10 +135,10 @@ export default class WalletController {
     async convertScoreToToken(score) {
         try {
             // We need a Signer here since this is a 'write' transaction.
-            this.signer = await this.#getProviderOrSigner(true);
+            let signer = await this.#getProviderOrSigner(true);
             // Create a new instance of the Contract with a Signer, which allows
             // update methods
-            const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, this.signer);
+            const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
             // call the claimTokens from the contract to convert the score to tokens
             const tx = await nftContract.claimTokens(score);
             this.setLoading(true);

@@ -3,6 +3,27 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export default class Game {
     #SCORE = 10;
+    #MODELS = [
+        "./models/delivery.glb",
+        "./models/ambulance.glb",
+        "./models/deliveryFlat.glb",
+        "./models/tractor.glb",
+        "./models/truck.glb",
+        "./models/truckFlat.glb",
+        "./models/van.glb",
+        "./models/firetruck.glb",
+        "./models/garbageTruck.glb",
+        "./models/police.glb",
+        "./models/sedan.glb",
+        "./models/suv.glb",
+        "./models/suvLuxury.glb",
+        "./models/taxi.glb",
+        "./models/tractorShovel.glb",
+        "./models/hatchbackSports.glb",
+        "./models/race.glb",
+        "./models/raceFuture.glb",
+        "./models/sedanSports.glb",
+    ]
 
     constructor() {
         this.sizes = {
@@ -13,28 +34,7 @@ export default class Game {
         this.direction = "idle";
         this.speed = 0.1;
 
-        this.models = [
-            "./models/ambulance.glb",
-            "./models/delivery.glb",
-            "./models/deliveryFlat.glb",
-            "./models/firetruck.glb",
-            "./models/garbageTruck.glb",
-            "./models/hatchbackSports.glb",
-            "./models/police.glb",
-            "./models/race.glb",
-            "./models/raceFuture.glb",
-            "./models/sedan.glb",
-            "./models/sedanSports.glb",
-            "./models/suv.glb",
-            "./models/suvLuxury.glb",
-            "./models/taxi.glb",
-            "./models/tractor.glb",
-            "./models/tractorShovel.glb",
-            "./models/truck.glb",
-            "./models/truckFlat.glb",
-            "./models/van.glb"
-        ]
-        this.modelPath = this.models[0];
+        this.modelPath = this.#MODELS[0];
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(
@@ -73,9 +73,6 @@ export default class Game {
             this.scene.add(this.vehicle)
             this.vehicleBoundingBox.setFromObject(this.vehicle)
             this.loaded++;
-            if(this.loaded > 2) {
-                this.animate()
-            }
         });
 
         this.flag = null;
@@ -93,9 +90,6 @@ export default class Game {
             )
             this.flagBoundingBox.setFromObject(this.flag)
             this.loaded++;
-            if(this.loaded > 2) {
-                this.animate()
-            }
         });
 
         this.arrow;
@@ -108,9 +102,6 @@ export default class Game {
             this.arrow.position.set(0, 0, 0)
             this.arrow.rotation.y = (Math.PI / 2)
             this.loaded++;
-            if(this.loaded > 2) {
-                this.animate()
-            }
         });
 
         this.ring = new THREE.Mesh(
@@ -129,6 +120,30 @@ export default class Game {
         this.floor.rotation.x = -(Math.PI / 2)
 
         this.#SCORE = 0;
+    }
+
+    loadNewVehicleModel(value = 0) {
+        if(this.vehicle == null) {
+            return;
+        }
+        if(value >= this.#MODELS.length - 1) {
+            value = this.#MODELS.length - 1;
+        }
+        let modelPath = this.#MODELS[value];
+        this.loader.load( modelPath, ( gltf ) => {
+            this.scene.remove(this.vehicle)
+            // get vehicle position and rotation
+            let position = this.vehicle.position;
+            let rotation = this.vehicle.rotation;
+            this.vehicle = gltf.scene;
+            this.vehicle.traverse((o) => {
+                if (o.isMesh) o.material = this.matcapMaterial;
+            });
+            this.vehicle.position.set(position.x, position.y, position.z);
+            this.vehicle.rotation.set(rotation.x, rotation.y, rotation.z);
+            this.scene.add(this.vehicle)
+            this.vehicleBoundingBox.setFromObject(this.vehicle)
+        });
     }
 
     getScore() {
@@ -207,6 +222,13 @@ export default class Game {
             this.vehicle.position.y, 
             this.vehicle.position.z
         )
+
+        // get distance between camera and vehicle
+        let distance = this.camera.position.distanceTo(this.vehicle.position)
+        if(distance > 80) {
+            //spin the car around 140 degrees
+            this.vehicle.rotateY(140)
+        }
 
         if(this.vehicleBoundingBox.intersectsBox(this.flagBoundingBox)) {
             this.flag.position.set(

@@ -4,7 +4,10 @@ import Game from "./game/game";
 const walletController = new WalletController();
 const game = new Game();
 
-let flagBalance = '...';
+let flagBalance = 0;
+
+let currentModelIndex = 1
+let currentModelLevel = 4
 
 window.addEventListener('resize', () => {
     game.resize();
@@ -21,8 +24,8 @@ window.addEventListener('keyup', (event) => {
 
 function updateFlagBalance() {
   // Create a promise to update flagBalance
-  walletController.getBalance().then((balance) => {
-    flagBalance = Math.floor(balance * 100);
+  walletController.getTokenBalance().then((balance) => {
+    flagBalance = Math.floor(balance);
   });
 }
 
@@ -36,6 +39,7 @@ connectButton.onclick = async () => {
       connectButton.innerText = 'Wallet Connected'
 
       convertButton.disabled = false;
+      updateFlagBalance();
     }
   }
 };
@@ -46,6 +50,7 @@ convertButton.onclick = async () => {
   if(walletController.walletConnected){
     await walletController.convertScoreToToken(game.getScore());
     game.resetScore();
+    updateFlagBalance();
   }
 };
 
@@ -75,12 +80,15 @@ function loop() {
     convertTutorial.style.display = 'block';
   }
 
-  scoreElement.innerHTML = '<code>SCORE</code>: ' + score;
-
-  if(timer > 200 && walletController.walletConnected) {
-    updateFlagBalance();
-    timer = 0;
+  // console.log(score + flagBalance, currentModelLevel, currentModelIndex)
+  if(score + flagBalance > currentModelLevel) {
+    game.loadNewVehicleModel(currentModelIndex);
+    currentModelIndex++;
+    currentModelLevel = 4 * currentModelIndex;
+    score++;
   }
+
+  scoreElement.innerHTML = '<code>SCORE</code>: ' + score;
 
   game.animate();
   timer++;
