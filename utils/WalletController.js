@@ -111,7 +111,7 @@ export default class WalletController {
         const address = await signer.getAddress();
 
         // Create a new contract instance with the token's contract address and the ERC20 ABI
-        const tokenContract = new Contract('0x6C2EE8F9DFc770387D4A5D327D4Ddb6C9dd953Fa', [
+        const tokenContract = new Contract('0x6e9fc4184BcB05A01ADc288d795597B6e9685975', [
             // Some details about the token
             "function balanceOf(address owner) view returns (uint256)",
             "function decimals() view returns (uint8)"

@@ -1,4 +1,4 @@
-export const NFT_CONTRACT_ADDRESS = "0x28c8c327BF1BA309Bc9cb86787018BfE4F501e55";
+export const NFT_CONTRACT_ADDRESS = "0xe5c10509CD81ca57bC004BB178EC8609cC60f553";
 export const abi = [
     {
         "inputs": [
@@ -15,6 +15,26 @@ export const abi = [
         ],
         "stateMutability": "nonpayable",
         "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "BLAST",
+        "outputs": [
+            {
+                "internalType": "contract IBlast",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "claimMyContractsGas",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
         "inputs": [
@@ -56,6 +76,19 @@ export const abi = [
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
             }
         ],
         "stateMutability": "view",

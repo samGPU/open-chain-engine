@@ -19,10 +19,10 @@ export default class Game {
         "./models/suvLuxury.glb",
         "./models/taxi.glb",
         "./models/tractorShovel.glb",
+        "./models/sedanSports.glb",
         "./models/hatchbackSports.glb",
         "./models/race.glb",
         "./models/raceFuture.glb",
-        "./models/sedanSports.glb",
     ]
 
     constructor() {
