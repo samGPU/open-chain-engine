@@ -25,8 +25,25 @@
   </head>
   <body>
     <main class='main'>
-      <h1>Test Wallet Connection</h1>
-      <button id="connectButton">Connect Wallet</button>
+      <div class="topRight">
+        <button class="button" id="connectButton">Connect Wallet</button>
+        <button class="button" id="convertButton">Convert</button>
+      </div>
+      <div class="topLeft">
+        <p id="score"><code>SCORE</code>: 0</p>
+        <p id="flags"><code>$FLAG</code>: 0</p>
+      </div>
+      <div class="center">
+        <div class="card" id="controlsTutorial">
+          <p>Collect ⛳'s by moving the car with ⬅️ and ➡️</p>
+        </div>
+        <div class="card" id="walletTutorial">
+          <p>Connect your wallet to save progress!</p>
+        </div>
+        <div class="card" id="convertTutorial">
+          <p>Use the Convert button to claim your $FLAG tokens!</p>
+        </div>
+      </div>
       <canvas class="webgl" id="webgl"></canvas>
       <script type="module" src="./main.js"></script>
     </main>

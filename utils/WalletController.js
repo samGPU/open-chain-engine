@@ -10,7 +10,7 @@ export default class WalletController {
         this.signer = null;
 
         this.web3Modal = new Web3Modal({
-            network: "mumbai",
+            network: "blast sepolia",
             cacheProvider: true,
             providerOptions: {},
         });
@@ -55,10 +55,13 @@ export default class WalletController {
       
         // If user is not connected to the Mumbai network, let them know and throw an error
         const { chainId } = await web3Provider.getNetwork();
-        if (chainId !== 80001) {
-            await this.#changeNetwork();
+
+        // console.log(chainId)
+        if (chainId !== 168587773) {
+            // await this.#changeNetwork();
             // window.alert("Change the network to Mumbai");
             // throw new Error("Change network to Mumbai");
+            console.warn('Connect to Blast Sepolia!')
         }
       
         if (needSigner) {
@@ -69,13 +72,15 @@ export default class WalletController {
     };
 
     /**
-     * #changeNetwork: Change the network to Mumbai testnet
+     * #changeNetwork: Change the network to Blast Sepolia
+     * Not using for now as broken
      */
     async #changeNetwork() {
+        
         try {
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
-                params: [{ chainId: '0x13881' }], // 0x13881 is the chainId for the Mumbai testnet
+                params: [{ chainId: '0xA066FD7' }], // 0xA066FD7 is the hexadecimal equivalent of 168587773
             });
         } catch (switchError) {
             if (switchError.code === 4902) {
@@ -83,15 +88,15 @@ export default class WalletController {
                     await window.ethereum.request({
                         method: 'wallet_addEthereumChain',
                         params: [{
-                            chainId: '0x13881',
-                            chainName: 'Mumbai Testnet',
+                            chainId: '168587773',
+                            chainName: 'Blast Sepolia',
                             nativeCurrency: {
-                                name: 'MATIC',
-                                symbol: 'MATIC',
-                                decimals: 18
+                                name: 'Ethereum',
+                                symbol: 'ETH',
+                                decimals: 18,
                             },
-                            rpcUrls: ['https://rpc-mumbai.matic.today'],
-                            blockExplorerUrls: ['https://explorer-mumbai.maticvigil.com/'],
+                            rpcUrls: ['https://sepolia.blast.io'],
+                            blockExplorerUrls: ['https://testnet.blastscan.io'],
                         }],
                     });
                 } catch (addError) {
@@ -100,6 +105,14 @@ export default class WalletController {
                 }
             }
         }
+    }
+
+    async getBalance() {
+        console.log('TODO - getBalance of $FLAG token')
+    }
+
+    async convertScoreToToken(score) {
+        console.log('TODO - convert the user score to $FLAG token')
     }
 
     /**

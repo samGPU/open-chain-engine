@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export default class Game {
+    #SCORE = 0;
+
     constructor() {
         this.sizes = {
             width: window.innerWidth,
@@ -66,6 +68,8 @@ export default class Game {
             this.vehicle.traverse((o) => {
                 if (o.isMesh) o.material = this.matcapMaterial;
             });
+            this.vehicle.rotateY(-Math.PI / 1.5)
+            this.vehicle.position.z = -2;
             this.scene.add(this.vehicle)
             this.vehicleBoundingBox.setFromObject(this.vehicle)
             this.loaded++;
@@ -124,7 +128,15 @@ export default class Game {
         this.floor.position.y = -0.5
         this.floor.rotation.x = -(Math.PI / 2)
 
-        this.score = 0;
+        this.#SCORE = 0;
+    }
+
+    getScore() {
+        return this.#SCORE;
+    }
+
+    #increaseScore() {
+        this.#SCORE++;
     }
 
     resize() {
@@ -139,17 +151,17 @@ export default class Game {
     }
 
     keyDownHandle(keyCode) {
-        if(keyCode == "a") {
+        if(keyCode == "a" || keyCode == "ArrowLeft") {
             this.direction = "left";
-        } else if(keyCode == "d") {
+        } else if(keyCode == "d" || keyCode == "ArrowRight") {
             this.direction = "right";
         }
     }
 
     keyUpHandle(keyCode) {
-        if(keyCode == "a") {
+        if(keyCode == "a" || keyCode == "ArrowLeft") {
             this.direction = "forward";
-        } else if(keyCode == "d") {
+        } else if(keyCode == "d" || keyCode == "ArrowRight") {
             this.direction = "forward";
         }
     }
@@ -182,7 +194,9 @@ export default class Game {
             this.vehicle.position.z
         )
 
-        this.vehicle.translateZ(-this.speed);
+        if(this.direction !== 'idle') {
+            this.vehicle.translateZ(-this.speed);
+        }
 
         this.camera.lookAt(
             this.vehicle.position.x, 
@@ -197,7 +211,7 @@ export default class Game {
                 (Math.floor((Math.random() * 50) + 1) - 25)
             )
             this.flagBoundingBox.setFromObject(this.flag)
-            this.score++;
+            this.#increaseScore();
             this.speed += 0.01;
         }
 

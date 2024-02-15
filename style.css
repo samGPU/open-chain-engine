@@ -43,6 +43,7 @@ body {
 }
 
 body {
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -127,9 +128,9 @@ a {
 }
 
 .card {
-  padding: 1rem 1.2rem;
+  padding: 1rem 2rem;
   border-radius: var(--border-radius);
-  background: rgba(var(--card-rgb), 0);
+  background: rgba(var(--card-rgb), 0.5);
   border: 1px solid rgba(var(--card-border-rgb), 0);
   transition: background 200ms, border 200ms;
 }
@@ -146,18 +147,93 @@ a {
 
 .card p {
   margin: 0;
-  opacity: 0.6;
+  opacity: 0.9;
   font-size: 0.9rem;
   line-height: 1.5;
-  max-width: 30ch;
+  max-width: 60ch;
   text-wrap: balance;
+}
+
+#convertTutorial {
+  display: none;
+}
+
+/* CSS */
+.button {
+  appearance: none;
+  background-color: #000000;
+  border: 2px solid #00ff00;
+  border-radius: 15px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0;
+  min-height: 60px;
+  min-width: 0;
+  outline: none;
+  padding: 16px 24px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  will-change: transform;
+  transition: all 1s ease-in-out;
+}
+
+.button:disabled {
+  pointer-events: none;
+  border-color: #a0a0a0;
+  transition: all 1s ease-in-out;
+}
+
+.button:hover {
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  border-color: #ffffff;
+  transition: all 0.5s ease-in-out;
+}
+
+.button:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+.topRight {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 15px;
+  justify-content: right;
+  align-items: center;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+}
+
+.topLeft {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 15px;
+  justify-content: left;
+  align-items: center;
+  position: fixed;
+  top: 10px;
+  left: 10px;
 }
 
 .center {
   display: flex;
+  flex-flow: column nowrap;
+  gap: 10px;
   justify-content: center;
   align-items: center;
-  position: relative;
+  position: absolute;
+  top: 1rem;
   padding: 4rem 0;
 }
 
